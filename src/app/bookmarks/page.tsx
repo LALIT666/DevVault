@@ -6,14 +6,13 @@ export default async function BookmarksPage() {
   // 📌 Get authenticated user
   const session = await auth();
 
-  if (!session?.user?.id) {
-    redirect("/login");
-  }
+  //No redirect needed! middleware handles it
 
   // 📌 CONCEPT: Filter by user ID
   const bookmarks = await prisma.bookmark.findMany({
     where: {
-      userId: session.user.id, // 📌 Only user's bookmarks
+      // ! -> iska matlab simple sa hai ki me ts ko bol raha hu ki mere ko pakka pata hai ki ye null ya undefine nahi hoga or sahi baat hai bhai isse pahalae toh middleware chal raha hai na isliye null nahi hoga
+      userId: session!.user!.id, // 📌 Only user's bookmarks
     },
     orderBy: {
       createdAt: "desc",

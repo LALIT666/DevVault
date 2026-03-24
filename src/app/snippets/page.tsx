@@ -1,19 +1,16 @@
 import { prisma } from "@/lib/prisma";
 import { auth } from "@/lib/auth";
-import { redirect } from "next/navigation";
 
 export default async function SnippetsPage() {
   const session = await auth();
 
-  if (!session?.user?.id) {
-    redirect("/login");
-  }
+  //No redirect needed! Middleware handles it
 
   await new Promise((resolve) => setTimeout(resolve, 1000));
 
   const snippets = await prisma.snippet.findMany({
     where: {
-      userId: session.user.id,
+      userId: session!.user!.id,
     },
     orderBy: {
       createdAt: "desc",

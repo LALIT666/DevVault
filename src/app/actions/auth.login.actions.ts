@@ -1,6 +1,11 @@
 "use server";
 
 import { signIn } from "@/lib/auth";
+import { redirect } from "next/navigation";
+
+type PageProps = {
+  searchParams: { callbackUrl?: string };
+};
 
 type LoginState = {
   error?: string;
@@ -8,10 +13,11 @@ type LoginState = {
 };
 
 export async function loginWithCredentials(
+  { searchParams }: PageProps,
   prevState: LoginState,
   formData: FormData,
 ): Promise<LoginState> {
-  // ✅ Now return type is allowed!
+  const callbackUrl = searchParams.callbackUrl || "/dashboard";
   const email = formData.get("email") as string;
   const password = formData.get("password") as string;
 

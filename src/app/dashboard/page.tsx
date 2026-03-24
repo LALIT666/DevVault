@@ -1,41 +1,81 @@
-async function getDashboardData() {
-  // 📌 Simulating random error
-  const shouldError = Math.random() > 0.5;
-  console.log(shouldError);
-
-  if (shouldError) {
-    throw new Error("Failed to fetch dashboard data!");
-  }
-
-  return {
-    bookmarks: 12,
-    snippets: 8,
-    collections: 3,
-  };
-}
+import { prisma } from "@/lib/prisma";
+import { auth } from "@/lib/auth";
 
 export default async function DashboardPage() {
-  const data = await getDashboardData();
+  const session = await auth();
+
+  const [bookmarkCount, snippetCount, collectionCount] = await Promise.all([
+    prisma.bookmark.count({
+      where: { userId: session!.user!.id },
+    }),
+    prisma.snippet.count({
+      where: { userId: session!.user!.id },
+    }),
+    prisma.collection.count({
+      where: { userId: session!.user!.id },
+    }),
+  ]);
+
+  //getting the recent activity
+
+  const recentBookmarks = await prisma.bookmark.findMany({
+    where: { userId: session!.user!.id },
+    orderBy: { createdAt: "desc" },
+    take: 5,
+  });
+
+  const recentSnippets = await prisma.snippet.findMany({
+    where: { userId: session!.user!.id },
+    orderBy: { createdAt: "desc" },
+    take: 5,
+  });
 
   return (
     <div>
-      <h2>Dashboard Overview</h2>
-      <p>SERVER COMPONENT: Fetching stats</p>
+      <h2>Dashboard</h2>
+      <p>Welcome back, {session!.user!.name || session!.user!.email}!</p>
 
+      <h3>Your Stats</h3>
       <div>
         <div>
-          <h3>Total Bookmarks</h3>
-          <p>{data.bookmarks}</p>
+          <h4>Total Bookmarks</h4>
+          <p>{bookmarkCount}</p>
         </div>
         <div>
-          <h3>Total Snippets</h3>
-          <p>{data.snippets}</p>
+          <h4>Total Snippets</h4>
+          <p>{snippetCount}</p>
         </div>
         <div>
-          <h3>Collections</h3>
-          <p>{data.collections}</p>
+          <h4>Collections</h4>
+          <p>{collectionCount}</p>
         </div>
       </div>
+
+      <h3>Recent Bookmarks</h3>
+      {recentBookmarks.length === 0 ? (
+        <p>No bookmarks yet</p>
+      ) : (
+        <ul>
+          {recentBookmarks.map((bookmark) => (
+            <li key={bookmark.id}>
+              <a href={`/bookmarks/${bookmark.id}`}>{bookmark.title}</a>
+            </li>
+          ))}
+        </ul>
+      )}
+
+      <h3>Recent Snippets</h3>
+      {recentSnippets.length === 0 ? (
+        <p>No snippets yes</p>
+      ) : (
+        <ul>
+          {recentSnippets.map((snippet) => (
+            <li key={snippet.id}>
+              <a href={`/snippets/${snippet.id}`}>{snippet.title}</a>
+            </li>
+          ))}
+        </ul>
+      )}
     </div>
   );
 }
