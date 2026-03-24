@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { ReactNode } from "react";
+import UserInfo from "./components/UserInfo";
 
 export const metadata = {
   title: "DevVault - Bookmark & Snippet Manager",
@@ -18,6 +19,7 @@ export default function RootLayout({ children }: { children: ReactNode }) {
             <Link href="/dashboard">Dashboard</Link> |
             <Link href="/login">Login</Link>
           </nav>
+          <UserInfo />
         </header>
 
         <main>{children}</main>

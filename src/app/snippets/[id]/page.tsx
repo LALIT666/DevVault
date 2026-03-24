@@ -1,4 +1,4 @@
-import { deleteSnippet } from "@/app/actions/snippet-actions";
+import { deleteSnippet } from "@/app/actions/snippet.actions";
 import DeleteButton from "@/app/components/DeleteButton";
 import { prisma } from "@/lib/prisma";
 import { notFound } from "next/navigation";

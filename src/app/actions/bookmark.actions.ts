@@ -5,6 +5,8 @@ import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import { bookmarkSchema } from "@/lib/validations";
 
+import { auth } from "@/lib/auth";
+
 type Formstate = {
   errors?: {
     title?: string[];
@@ -22,6 +24,15 @@ export async function createBookmark(
   prevState: Formstate,
   formData: FormData,
 ): Promise<Formstate> {
+  const session = await auth();
+
+  if (!session?.user?.id) {
+    return {
+      errors: {
+        _form: ["You must be logged in to create a bookmark"],
+      },
+    };
+  }
   const rawData = {
     title: formData.get("title"),
     url: formData.get("url"),
@@ -39,16 +50,6 @@ export async function createBookmark(
     };
   }
   try {
-    const user = await prisma.user.findFirst();
-
-    if (!user) {
-      return {
-        errors: {
-          _form: ["No user found. Please login"],
-        },
-      };
-    }
-
     const tagsArray = validateFields.data.tags
       ? validateFields.data.tags
           .split(",")
@@ -63,7 +64,7 @@ export async function createBookmark(
         description: validateFields.data.description,
         tags: tagsArray,
         isPublic: validateFields.data.isPublic,
-        userId: user.id,
+        userId: session.user.id,
       },
     });
 
@@ -87,6 +88,27 @@ export async function updateBookmark(
   prevState: Formstate,
   formData: FormData,
 ): Promise<Formstate> {
+  const session = await auth();
+
+  if (!session?.user?.id) {
+    return {
+      errors: {
+        _form: ["You must be logged in"],
+      },
+    };
+  }
+
+  const bookmark = await prisma.bookmark.findUnique({
+    where: { id },
+  });
+
+  if (!bookmark || bookmark.userId !== session.user.id) {
+    return {
+      errors: {
+        _form: ["Bookmark not found or you do not have permission"],
+      },
+    };
+  }
   const rawData = {
     title: formData.get("title"),
     url: formData.get("url"),
@@ -140,6 +162,19 @@ export async function updateBookmark(
 }
 
 export async function deleteBookmark(id: string) {
+  const session = await auth();
+
+  if (!session?.user?.id) {
+    throw new Error("You must be logged in");
+  }
+
+  const bookmark = await prisma.bookmark.findUnique({
+    where: { id },
+  });
+
+  if (!bookmark || bookmark.userId !== session.user.id) {
+    throw new Error("Bookmark not found or unauthorized");
+  }
   try {
     await prisma.bookmark.delete({
       where: { id },

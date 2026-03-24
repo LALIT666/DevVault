@@ -1,7 +1,7 @@
 "use client";
 
 import { useFormState } from "react-dom";
-import { updateSnippet } from "@/app/actions/snippet-actions";
+import { updateSnippet } from "@/app/actions/snippet.actions";
 import SubmitButton from "./SubmitButton";
 
 type SnippetEditFormProps = {

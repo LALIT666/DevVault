@@ -1,6 +1,7 @@
 "use server";
 
 import { prisma } from "@/lib/prisma";
+import { auth } from "@/lib/auth";
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import { snippetSchema } from "@/lib/validations";
@@ -13,7 +14,6 @@ type FormState = {
     description?: string[];
     _form?: string[];
   };
-
   success?: boolean;
   message?: string;
 };
@@ -22,63 +22,16 @@ export async function createSnippet(
   prevState: FormState,
   formData: FormData,
 ): Promise<FormState> {
-  const rawData = {
-    title: formData.get("title"),
-    code: formData.get("code"),
-    language: formData.get("language"),
-    description: formData.get("description"),
-    isPublic: formData.get("isPublic") === "on",
-  };
+  const session = await auth();
 
-  const validateFields = snippetSchema.safeParse(rawData);
-
-  if (!validateFields.success) {
-    return {
-      errors: validateFields.error.flatten().fieldErrors,
-      message: "Validation failed. Please check the form.",
-    };
-  }
-
-  try {
-    const user = await prisma.user.findFirst();
-    if (!user) {
-      return {
-        errors: {
-          _form: ["No user found. Please login"],
-        },
-      };
-    }
-
-    await prisma.snippet.create({
-      data: {
-        title: validateFields.data.title,
-        code: validateFields.data.code,
-        language: validateFields.data.language,
-        description: validateFields.data.description || null,
-        isPublic: validateFields.data.isPublic,
-        userId: user.id,
-      },
-    });
-
-    console.log("✅ Snippet created");
-  } catch (error) {
-    console.error("Database error: ", error);
+  if (!session?.user?.id) {
     return {
       errors: {
-        _form: ["Failed to create snippet. Please try again."],
+        _form: ["You must be logged in to create a snippet"],
       },
     };
   }
-  revalidatePath("/snippets");
-  redirect("/snippets");
-}
 
-// 📌 UPDATE Snippet
-export async function updateSnippet(
-  id: string,
-  prevData: FormState,
-  formData: FormData,
-): Promise<FormState> {
   const rawData = {
     title: formData.get("title"),
     code: formData.get("code"),
@@ -92,7 +45,77 @@ export async function updateSnippet(
   if (!validatedFields.success) {
     return {
       errors: validatedFields.error.flatten().fieldErrors,
-      message: "Validation failed.Please check the form",
+      message: "Validation failed. Please check the form.",
+    };
+  }
+
+  try {
+    await prisma.snippet.create({
+      data: {
+        title: validatedFields.data.title,
+        code: validatedFields.data.code,
+        language: validatedFields.data.language,
+        description: validatedFields.data.description || null,
+        isPublic: validatedFields.data.isPublic,
+        userId: session.user.id,
+      },
+    });
+
+    console.log("✅ Snippet created");
+  } catch (error) {
+    console.error("Database error:", error);
+    return {
+      errors: {
+        _form: ["Failed to create snippet. Please try again."],
+      },
+    };
+  }
+
+  revalidatePath("/snippets");
+  redirect("/snippets");
+}
+
+export async function updateSnippet(
+  id: string,
+  prevState: FormState,
+  formData: FormData,
+): Promise<FormState> {
+  const session = await auth();
+
+  if (!session?.user?.id) {
+    return {
+      errors: {
+        _form: ["You must be logged in"],
+      },
+    };
+  }
+
+  const snippet = await prisma.snippet.findUnique({
+    where: { id },
+  });
+
+  if (!snippet || snippet.userId !== session.user.id) {
+    return {
+      errors: {
+        _form: ["Snippet not found or unauthorized"],
+      },
+    };
+  }
+
+  const rawData = {
+    title: formData.get("title"),
+    code: formData.get("code"),
+    language: formData.get("language"),
+    description: formData.get("description"),
+    isPublic: formData.get("isPublic") === "on",
+  };
+
+  const validatedFields = snippetSchema.safeParse(rawData);
+
+  if (!validatedFields.success) {
+    return {
+      errors: validatedFields.error.flatten().fieldErrors,
+      message: "Validation failed. Please check the form.",
     };
   }
 
@@ -101,19 +124,19 @@ export async function updateSnippet(
       where: { id },
       data: {
         title: validatedFields.data.title,
-        code: validatedFields.data.title,
-        language: validatedFields.data.title,
-        description: validatedFields.data.title,
+        code: validatedFields.data.code,
+        language: validatedFields.data.language,
+        description: validatedFields.data.description || null,
         isPublic: validatedFields.data.isPublic,
       },
     });
 
-    console.log("Snippet updated: ", id);
+    console.log("✅ Snippet updated:", id);
   } catch (error) {
-    console.error("Database error: ", error);
+    console.error("Database error:", error);
     return {
       errors: {
-        _form: ["Failed to update snippet. Please try again"],
+        _form: ["Failed to update snippet. Please try again."],
       },
     };
   }
@@ -123,8 +146,21 @@ export async function updateSnippet(
   redirect(`/snippets/${id}`);
 }
 
-// 📌 DELETE Snippet
 export async function deleteSnippet(id: string) {
+  const session = await auth();
+
+  if (!session?.user?.id) {
+    throw new Error("You must be logged in");
+  }
+
+  const snippet = await prisma.snippet.findUnique({
+    where: { id },
+  });
+
+  if (!snippet || snippet.userId !== session.user.id) {
+    throw new Error("Snippet not found or unauthorized");
+  }
+
   try {
     await prisma.snippet.delete({
       where: { id },
@@ -132,7 +168,7 @@ export async function deleteSnippet(id: string) {
 
     console.log("✅ Snippet deleted:", id);
   } catch (error) {
-    console.error("Delete error: ", error);
+    console.error("Delete error:", error);
     throw new Error("Failed to delete snippet");
   }
 

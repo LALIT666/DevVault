@@ -1,7 +1,20 @@
 import { prisma } from "@/lib/prisma";
+import { auth } from "@/lib/auth";
+import { redirect } from "next/navigation";
 
 export default async function SnippetsPage() {
+  const session = await auth();
+
+  if (!session?.user?.id) {
+    redirect("/login");
+  }
+
+  await new Promise((resolve) => setTimeout(resolve, 1000));
+
   const snippets = await prisma.snippet.findMany({
+    where: {
+      userId: session.user.id,
+    },
     orderBy: {
       createdAt: "desc",
     },
@@ -13,11 +26,10 @@ export default async function SnippetsPage() {
   return (
     <div>
       <h2>Code Snippets</h2>
-      <p>SERVER COMPONENT: Fetching from database</p>
       <p>Total snippets: {snippets.length}</p>
 
       <p>
-        <a href="/snippets/new">Add new Snippet</a>
+        <a href="/snippets/new">+ Add New Snippet</a>
       </p>
 
       {snippets.length === 0 ? (

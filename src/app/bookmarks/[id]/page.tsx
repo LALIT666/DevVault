@@ -1,4 +1,4 @@
-import { deleteBookmark } from "@/app/actions/bookmark-actions";
+import { deleteBookmark } from "@/app/actions/bookmark.actions";
 import { prisma } from "@/lib/prisma";
 import { notFound } from "next/navigation";
 import DeleteButton from "@/app/components/DeleteButton";
@@ -40,7 +40,7 @@ export default async function BookmarkDetailPage({ params }: PageProps) {
       <div>
         <strong>Tags: </strong>
         {bookmark.tags.length > 0 ? (
-          bookmark.tags.map((tag: string) => <span key={tag}>{tag}</span>)
+          bookmark.tags.map((tag: string) => <span key={tag}>{tag}, </span>)
         ) : (
           <span>No tags</span>
         )}

@@ -1,7 +1,7 @@
 "use client";
 
 import { useFormState } from "react-dom";
-import { updateBookmark } from "@/app/actions/bookmark-actions";
+import { updateBookmark } from "@/app/actions/bookmark.actions";
 import SubmitButton from "./SubmitButton";
 
 type BookmarkEditFormProps = {

@@ -1,7 +1,20 @@
 import { prisma } from "@/lib/prisma";
+import { auth } from "@/lib/auth";
+import { redirect } from "next/navigation";
 
 export default async function BookmarksPage() {
+  // 📌 Get authenticated user
+  const session = await auth();
+
+  if (!session?.user?.id) {
+    redirect("/login");
+  }
+
+  // 📌 CONCEPT: Filter by user ID
   const bookmarks = await prisma.bookmark.findMany({
+    where: {
+      userId: session.user.id, // 📌 Only user's bookmarks
+    },
     orderBy: {
       createdAt: "desc",
     },
@@ -16,7 +29,7 @@ export default async function BookmarksPage() {
       <p>Total bookmarks: {bookmarks.length}</p>
 
       <p>
-        <a href="/bookmarks/new">+ Add new bookmark</a>
+        <a href="/bookmarks/new">+ Add New Bookmark</a>
       </p>
 
       {bookmarks.length === 0 ? (
@@ -28,8 +41,7 @@ export default async function BookmarksPage() {
               <a href={`/bookmarks/${bookmark.id}`}>{bookmark.title}</a>
               <br />
               <small>
-                {" "}
-                {bookmark.tags.join(",")}|Created:{" "}
+                {bookmark.tags.join(", ")} | Created:{" "}
                 {bookmark.createdAt.toLocaleDateString()}
               </small>
             </li>

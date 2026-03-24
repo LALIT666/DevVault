@@ -1,7 +1,7 @@
 "use client";
 
 import { useFormState } from "react-dom";
-import { createSnippet } from "@/app/actions/snippet-actions";
+import { createSnippet } from "@/app/actions/snippet.actions";
 import SubmitButton from "./SubmitButton";
 
 const initialState = {

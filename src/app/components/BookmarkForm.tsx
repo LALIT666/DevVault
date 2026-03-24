@@ -1,7 +1,7 @@
 "use client";
 
 import { useFormState } from "react-dom";
-import { createBookmark } from "../actions/bookmark-actions";
+import { createBookmark } from "../actions/bookmark.actions";
 import SubmitButton from "./SubmitButton";
 
 const initialState = {
