@@ -1,69 +1,53 @@
-import Link from "next/link";
+// 📌 CONCEPT: Layout with Parallel Route Slots
+
+import { auth } from "@/lib/auth";
 import { ReactNode } from "react";
 
-export default function DashboardLayout({ children }: { children: ReactNode }) {
+type DashboardLayoutProps = {
+  children: ReactNode; // 📌 Default slot (page.tsx)
+  stats: ReactNode; // 📌 @stats slot
+  activity: ReactNode; // 📌 @activity slot
+  recommendations: ReactNode; // 📌 @recommendations slot
+};
+
+export default async function DashboardLayout({
+  children,
+  stats,
+  activity,
+  recommendations,
+}: DashboardLayoutProps) {
+  const session = await auth();
+
+  const showRecommendations = true;
   return (
-    <div className="flex gap-8">
-      {/* Sidebar */}
-      <aside className="w-64 shrink-0">
-        <div className="card-gumroad sticky top-8">
-          <h3 className="text-lg font-bold mb-6 flex items-center gap-2">
-            <span className="text-2xl">📊</span>
-            Dashboard Menu
-          </h3>
+    <div>
+      <h2>Dashboard</h2>
 
-          <ul className="space-y-2">
-            <li>
-              <Link
-                href="/dashboard"
-                className="flex items-center gap-3 px-4 py-3 rounded-lg font-semibold bg-[#ff90e8] border-2 border-black hover:translate-x-1 transition-transform"
-              >
-                <span>🏠</span>
-                Overview
-              </Link>
-            </li>
-            <li>
-              <Link
-                href="/dashboard/stats"
-                className="flex items-center gap-3 px-4 py-3 rounded-lg font-semibold hover:bg-gray-100 border-2 border-transparent hover:border-black transition-all hover:translate-x-1"
-              >
-                <span>📈</span>
-                Statistics
-              </Link>
-            </li>
-            <li>
-              <Link
-                href="/bookmarks"
-                className="flex items-center gap-3 px-4 py-3 rounded-lg font-semibold hover:bg-gray-100 border-2 border-transparent hover:border-black transition-all hover:translate-x-1"
-              >
-                <span>🔖</span>
-                Bookmarks
-              </Link>
-            </li>
-            <li>
-              <Link
-                href="/snippets"
-                className="flex items-center gap-3 px-4 py-3 rounded-lg font-semibold hover:bg-gray-100 border-2 border-transparent hover:border-black transition-all hover:translate-x-1"
-              >
-                <span>💻</span>
-                Snippets
-              </Link>
-            </li>
-          </ul>
+      {/* 📌 Default content (page.tsx) */}
+      <div>{children}</div>
 
-          <div className="mt-8 pt-6 border-t-2 border-gray-200">
-            <div className="bg-[#ffc900] p-4 rounded-lg border-2 border-black">
-              <p className="font-bold text-sm">🚀 Pro Tip</p>
-              <p className="text-xs mt-1">
-                Use keyboard shortcuts for faster navigation!
-              </p>
-            </div>
-          </div>
+      {/* 📌 CONCEPT: Grid layout with slots */}
+      <div>
+        {/* Left column - Stats */}
+        <div>
+          <h3>Statistics</h3>
+          {stats} {/* 📌 @stats/page.tsx renders here */}
         </div>
-      </aside>
 
-      {/* Main Content */}
-      <div className="flex-1">{children}</div>
+        {/* Middle column - Activity */}
+        <div>
+          <h3>Recent Activity</h3>
+          {activity} {/* 📌 @activity/page.tsx renders here */}
+        </div>
+
+        {/* Right column - Recommendations */}
+        {showRecommendations && (
+          <div>
+            <h3>Recommended</h3>
+            {recommendations} {/* 📌 @recommendations/page.tsx renders here */}
+          </div>
+        )}
+      </div>
     </div>
   );
 }

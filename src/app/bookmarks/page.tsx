@@ -1,6 +1,6 @@
 import { prisma } from "@/lib/prisma";
 import { auth } from "@/lib/auth";
-import { redirect } from "next/navigation";
+import Link from "next/link";
 
 export default async function BookmarksPage() {
   // 📌 Get authenticated user
@@ -37,7 +37,7 @@ export default async function BookmarksPage() {
         <ul>
           {bookmarks.map((bookmark) => (
             <li key={bookmark.id}>
-              <a href={`/bookmarks/${bookmark.id}`}>{bookmark.title}</a>
+              <Link href={`/bookmarks/${bookmark.id}`}>{bookmark.title}</Link>
               <br />
               <small>
                 {bookmark.tags.join(", ")} | Created:{" "}
@@ -50,3 +50,12 @@ export default async function BookmarksPage() {
     </div>
   );
 }
+
+// {/* 📌 CONCEPT: Link component for client-side navigation */}
+// {/* This will trigger the intercepting route (modal) */}
+// <Link href={`/bookmarks/${bookmark.id}`}>
+//   {bookmark.title}
+// </Link>
+
+// {/* 📌 Or regular <a> for full page load */}
+// {/* <a href={`/bookmarks/${bookmark.id}`}>{bookmark.title}</a>
