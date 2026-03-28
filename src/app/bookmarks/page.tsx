@@ -3,6 +3,9 @@ import { auth } from "@/lib/auth";
 import Link from "next/link";
 import { Metadata } from "next";
 
+// 📌 CONCEPT: Route Segment Config
+export const revalidate = 60; // 📌 Revalidate every 60 seconds
+
 // 📌 Static metadata for bookmarks list
 export const metadata: Metadata = {
   title: "My Bookmarks",
