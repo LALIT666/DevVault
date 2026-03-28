@@ -20,7 +20,12 @@ export default async function UserInfo() {
     <div>
       <p>Logged in as: {session.user.name || session.user.email}</p>
       {session.user.image && (
-        <Image src={session.user.image} alt="Profile" width={40} height={40} />
+        <Image
+          src={session.user.image}
+          alt={session.user.name || "User avatar"}
+          width={40}
+          height={40}
+        />
       )}
       <form action="/api/auth/signout" method="POST">
         <button type="submit">Sign Out</button>
