@@ -2,10 +2,74 @@ import { deleteBookmark } from "@/app/actions/bookmark.actions";
 import { prisma } from "@/lib/prisma";
 import { notFound } from "next/navigation";
 import DeleteButton from "@/app/components/DeleteButton";
+import { Metadata } from "next";
 
 type PageProps = {
   params: { id: string };
 };
+
+// 📌 CONCEPT: Dynamic Metadata Generation
+export async function generateMetadata({
+  params,
+}: PageProps): Promise<Metadata> {
+  const { id } = params;
+
+  //Fetch data for metadata
+  const bookmark = await prisma.bookmark.findUnique({
+    where: { id },
+    select: {
+      title: true,
+      description: true,
+      url: true,
+      tags: true,
+      isPublic: true,
+    },
+  });
+
+  if (!bookmark) {
+    return {
+      title: "Bookmark Not Found",
+    };
+  }
+
+  return {
+    title: bookmark.title,
+    description: bookmark.description || `Bookmark: ${bookmark.title}`,
+    keywords: bookmark.tags,
+
+    //Open graph for sharing
+    openGraph: {
+      title: bookmark.title,
+      description:
+        bookmark.description || `Check out this resource: ${bookmark.title} $`,
+      url: `https://devvault.app/bookmarks/${id}`,
+      type: "article",
+      images: bookmark.isPublic
+        ? [
+            {
+              url: "/og-bookmark.png",
+              width: 1200,
+              height: 630,
+              alt: bookmark.title,
+            },
+          ]
+        : [],
+    },
+
+    //twitter Card
+    twitter: {
+      card: "summary",
+      title: bookmark.title,
+      description: bookmark.description || bookmark.url,
+    },
+
+    //Robots (don't index private bookmarks)
+    robots: {
+      index: bookmark.isPublic,
+      follow: bookmark.isPublic,
+    },
+  };
+}
 
 export default async function BookmarkDetailPage({ params }: PageProps) {
   const { id } = params;

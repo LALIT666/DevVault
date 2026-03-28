@@ -23,8 +23,8 @@ export default async function BookmarkStatsPage() {
   });
 
   const topTags = Object.entries(tagMap)
-    .sort((a, b) => b[1] - a[1])
-    .slice(0, 5);
+    .sort((a, b) => b[1] - a[1]) //sorting in des order
+    .slice(0, 5); //first five
 
   return (
     <div>

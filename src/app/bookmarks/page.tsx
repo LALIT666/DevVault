@@ -1,6 +1,13 @@
 import { prisma } from "@/lib/prisma";
 import { auth } from "@/lib/auth";
 import Link from "next/link";
+import { Metadata } from "next";
+
+// 📌 Static metadata for bookmarks list
+export const metadata: Metadata = {
+  title: "My Bookmarks",
+  description: "View and manage your saved bookmarks",
+};
 
 export default async function BookmarksPage() {
   // 📌 Get authenticated user

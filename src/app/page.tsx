@@ -1,10 +1,22 @@
 import { Suspense } from "react";
 import { auth } from "@/lib/auth";
+import { Metadata } from "next";
 import FastComponent from "./components/FastComponent";
 import SlowComponent from "./components/SlowComponent";
 
+// 📌 CONCEPT: Static page metadata
+export const metadata: Metadata = {
+  title: "Home", // 📌 Uses template: "Home | DevVault"
+  description:
+    "Welcome to DevVault - organize your development bookmarks and code snippets in one place",
+  openGraph: {
+    title: "DevVault - Home",
+    description: "Welcome to DevVault",
+    url: "https://devvault.app",
+  },
+};
+
 export default async function HomePage() {
-  // 📌 Optional: Get session (but don't redirect)
   const session = await auth();
 
   return (
