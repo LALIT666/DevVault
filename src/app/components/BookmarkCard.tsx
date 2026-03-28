@@ -1,5 +1,3 @@
-// 📌 CONCEPT: Client Component for interactivity
-
 "use client";
 
 import { useState } from "react";
@@ -15,37 +13,41 @@ type BookmarkCardProps = {
 };
 
 export default function BookmarkCard({ bookmark }: BookmarkCardProps) {
-  // 📌 Client Component - Can use hooks
   const [expanded, setExpanded] = useState(false);
 
   return (
-    <div
-      style={{
-        border: "1px solid #ccc",
-        padding: "1rem",
-        marginBottom: "0.5rem",
-      }}
-    >
-      <p>CLIENT COMPONENT: Interactive card</p>
-
-      <h4>
-        <Link href={`/bookmarks/${bookmark.id}`}>{bookmark.title}</Link>
+    <div className="card">
+      <h4 className="text-lg font-semibold mb-2">
+        <Link
+          href={`/bookmarks/${bookmark.id}`}
+          className="text-gray-900 hover:text-primary-500 transition-colors"
+        >
+          {bookmark.title}
+        </Link>
       </h4>
 
-      {/* 📌 Client Component - Interactive toggle */}
-      <button onClick={() => setExpanded(!expanded)}>
+      <button
+        onClick={() => setExpanded(!expanded)}
+        className="btn btn-secondary text-sm mb-3"
+      >
         {expanded ? "Hide" : "Show"} Details
       </button>
 
       {expanded && (
-        <div>
-          <p>
+        <div className="mt-4 pt-4 border-t border-gray-200 space-y-2">
+          <p className="text-sm text-gray-600">
             URL:{" "}
-            <a href={bookmark.url} target="_blank">
+            <a
+              href={bookmark.url}
+              target="_blank"
+              className="text-primary-500 hover:text-primary-600 underline"
+            >
               {bookmark.url}
             </a>
           </p>
-          <p>Tags: {bookmark.tags.join(", ")}</p>
+          <p className="text-sm text-gray-600">
+            Tags: {bookmark.tags.join(", ")}
+          </p>
         </div>
       )}
     </div>

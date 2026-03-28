@@ -1,5 +1,3 @@
-// 📌 CONCEPT: Show loading during navigation
-
 "use client";
 
 import { usePathname } from "next/navigation";
@@ -9,11 +7,9 @@ export default function LoadingIndicator() {
   const pathname = usePathname();
   const [loading, setLoading] = useState(false);
 
-  // 📌 CONCEPT: Detect route changes
   useEffect(() => {
     setLoading(true);
 
-    // Simulate loading indicator
     const timer = setTimeout(() => {
       setLoading(false);
     }, 300);
@@ -24,18 +20,8 @@ export default function LoadingIndicator() {
   if (!loading) return null;
 
   return (
-    <div
-      style={{
-        position: "fixed",
-        top: 0,
-        left: 0,
-        right: 0,
-        height: "3px",
-        background: "blue",
-        zIndex: 9999,
-      }}
-    >
-      Loading...
+    <div className="fixed top-0 left-0 right-0 h-1 bg-primary-500 z-50 animate-pulse">
+      <div className="h-full bg-primary-600 w-1/3 animate-pulse"></div>
     </div>
   );
 }

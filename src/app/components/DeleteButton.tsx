@@ -16,7 +16,12 @@ export default function DeleteButton({ itemName }: DeleteButtonProps) {
   };
 
   return (
-    <button type="submit" onClick={handleClick} disabled={pending}>
+    <button
+      type="submit"
+      onClick={handleClick}
+      disabled={pending}
+      className="px-4 py-2 bg-red-500 text-white font-semibold rounded-gumroad hover:bg-red-600 disabled:opacity-50 disabled:cursor-not-allowed transition-all active:scale-95"
+    >
       {pending ? "Deleting..." : "Delete"}
     </button>
   );

@@ -1,0 +1,80 @@
+/* 📌 Tailwind directives */
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* 📌 Inter font from Google Fonts */
+@import url("https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap");
+
+/* 📌 Base styles (Gumroad-inspired) */
+@layer base {
+  body {
+    @apply bg-white text-gray-900 font-sans antialiased;
+  }
+
+  h1 {
+    @apply text-4xl md:text-5xl font-bold tracking-tight;
+  }
+
+  h2 {
+    @apply text-3xl md:text-4xl font-bold tracking-tight;
+  }
+
+  h3 {
+    @apply text-2xl md:text-3xl font-semibold;
+  }
+
+  h4 {
+    @apply text-xl md:text-2xl font-semibold;
+  }
+
+  p {
+    @apply text-base leading-relaxed text-gray-700;
+  }
+
+  a {
+    @apply text-gray-900 hover:text-primary-500 transition-colors duration-200;
+  }
+}
+
+/* 📌 Custom components */
+@layer components {
+  /* Gumroad-style button */
+  .btn {
+    @apply px-6 py-3 rounded-gumroad font-semibold transition-all duration-200 inline-block text-center;
+  }
+
+  .btn-primary {
+    @apply bg-gray-900 text-white hover:bg-gray-800 active:scale-95;
+  }
+
+  .btn-secondary {
+    @apply bg-gray-100 text-gray-900 hover:bg-gray-200 active:scale-95;
+  }
+
+  .btn-pink {
+    @apply bg-primary-500 text-white hover:bg-primary-600 active:scale-95;
+  }
+
+  /* Card component */
+  .card {
+    @apply bg-white border border-gray-200 rounded-gumroad p-6 hover:shadow-lg transition-shadow duration-200;
+  }
+
+  /* Input fields */
+  .input {
+    @apply w-full px-4 py-3 border border-gray-300 rounded-gumroad focus:outline-none focus:ring-2 focus:ring-gray-900 focus:border-transparent transition-all;
+  }
+
+  /* Textarea */
+  .textarea {
+    @apply w-full px-4 py-3 border border-gray-300 rounded-gumroad focus:outline-none focus:ring-2 focus:ring-gray-900 focus:border-transparent transition-all resize-none;
+  }
+}
+
+/* 📌 Utilities */
+@layer utilities {
+  .text-balance {
+    text-wrap: balance;
+  }
+}

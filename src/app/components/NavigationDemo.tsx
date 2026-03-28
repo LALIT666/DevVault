@@ -1,5 +1,3 @@
-// 📌 CONCEPT: All useRouter methods
-
 "use client";
 
 import { useRouter, usePathname, useSearchParams } from "next/navigation";
@@ -10,34 +8,53 @@ export default function NavigationDemo() {
   const searchParams = useSearchParams();
 
   return (
-    <div>
-      <h3>Navigation Demo</h3>
+    <div className="card space-y-6">
+      <h3 className="text-2xl font-semibold text-gray-900">Navigation Demo</h3>
 
-      <p>Current pathname: {pathname}</p>
-      <p>Current query: {searchParams.toString()}</p>
+      <div className="space-y-2">
+        <p className="text-sm text-gray-600">
+          Current pathname:{" "}
+          <span className="font-mono text-gray-900">{pathname}</span>
+        </p>
+        <p className="text-sm text-gray-600">
+          Current query:{" "}
+          <span className="font-mono text-gray-900">
+            {searchParams.toString()}
+          </span>
+        </p>
+      </div>
 
-      <div>
-        {/* 📌 router.push() - Navigate with history */}
-        <button onClick={() => router.push("/bookmarks")}>
+      <div className="grid grid-cols-2 gap-3">
+        <button
+          onClick={() => router.push("/bookmarks")}
+          className="btn btn-primary"
+        >
           Push to Bookmarks
         </button>
 
-        {/* 📌 router.replace() - Navigate without history */}
-        <button onClick={() => router.replace("/snippets")}>
+        <button
+          onClick={() => router.replace("/snippets")}
+          className="btn btn-secondary"
+        >
           Replace with Snippets
         </button>
 
-        {/* 📌 router.back() - Go back */}
-        <button onClick={() => router.back()}>Go Back</button>
+        <button onClick={() => router.back()} className="btn btn-secondary">
+          Go Back
+        </button>
 
-        {/* 📌 router.forward() - Go forward */}
-        <button onClick={() => router.forward()}>Go Forward</button>
+        <button onClick={() => router.forward()} className="btn btn-secondary">
+          Go Forward
+        </button>
 
-        {/* 📌 router.refresh() - Refresh current route */}
-        <button onClick={() => router.refresh()}>Refresh Page</button>
+        <button onClick={() => router.refresh()} className="btn btn-secondary">
+          Refresh Page
+        </button>
 
-        {/* 📌 router.prefetch() - Manual prefetch */}
-        <button onClick={() => router.prefetch("/dashboard")}>
+        <button
+          onClick={() => router.prefetch("/dashboard")}
+          className="btn btn-secondary"
+        >
           Prefetch Dashboard
         </button>
       </div>

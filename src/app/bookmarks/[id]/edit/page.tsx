@@ -1,5 +1,3 @@
-// 📌 CONCEPT: Edit form with existing data
-
 import { prisma } from "@/lib/prisma";
 import { notFound } from "next/navigation";
 import BookmarkEditForm from "@/app/components/BookmarkEditForm";
@@ -20,10 +18,13 @@ export default async function EditBookmarkPage({ params }: PageProps) {
   }
 
   return (
-    <div>
-      <h2>Edit Bookmark</h2>
-      <p>SERVER COMPONENET: FETCHING BOOKMARK DATA</p>
-      <p>Editing: {bookmark.title}</p>
+    <div className="space-y-6">
+      <div>
+        <h2 className="text-3xl font-bold text-gray-900 mb-2">Edit Bookmark</h2>
+        <p className="text-gray-600">
+          Editing: <span className="font-semibold">{bookmark.title}</span>
+        </p>
+      </div>
 
       <BookmarkEditForm bookmark={bookmark} />
     </div>

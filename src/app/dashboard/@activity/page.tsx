@@ -1,10 +1,7 @@
-// 📌 CONCEPT: Activity slot
-
 import { prisma } from "@/lib/prisma";
 import { auth } from "@/lib/auth";
 
 async function getRecentActivity() {
-  // 📌 Simulate delay
   await new Promise((resolve) => setTimeout(resolve, 1500));
 
   const session = await auth();
@@ -39,38 +36,60 @@ export default async function ActivitySlot() {
   const activity = await getRecentActivity();
 
   return (
-    <div>
-      <p>PARALLEL ROUTE: @activity slot</p>
+    <div className="card space-y-6">
+      <div>
+        <h4 className="text-lg font-semibold text-gray-900 mb-4">
+          Recent Bookmarks
+        </h4>
+        {activity.recentBookmarks.length === 0 ? (
+          <p className="text-sm text-gray-500">No recent bookmarks</p>
+        ) : (
+          <ul className="space-y-3">
+            {activity.recentBookmarks.map((bookmark) => (
+              <li key={bookmark.id} className="group">
+                <a
+                  href={`/bookmarks/${bookmark.id}`}
+                  className="block p-3 bg-gray-50 hover:bg-gray-100 rounded-gumroad transition-colors"
+                >
+                  <p className="font-medium text-gray-900 group-hover:text-primary-500 transition-colors">
+                    {bookmark.title}
+                  </p>
+                  <p className="text-xs text-gray-500 mt-1">
+                    {new Date(bookmark.createdAt).toLocaleDateString()}
+                  </p>
+                </a>
+              </li>
+            ))}
+          </ul>
+        )}
+      </div>
 
-      <h4>Recent Bookmarks</h4>
-      {activity.recentBookmarks.length === 0 ? (
-        <p>No recent bookmarks</p>
-      ) : (
-        <ul>
-          {activity.recentBookmarks.map((bookmark) => (
-            <li key={bookmark.id}>
-              <a href={`/bookmarks/${bookmark.id}`}>{bookmark.title}</a>
-              <br />
-              <small>{new Date(bookmark.createdAt).toLocaleDateString()}</small>
-            </li>
-          ))}
-        </ul>
-      )}
-
-      <h4>Recent Snippets</h4>
-      {activity.recentSnippets.length === 0 ? (
-        <p>No recent snippets</p>
-      ) : (
-        <ul>
-          {activity.recentSnippets.map((snippet) => (
-            <li key={snippet.id}>
-              <a href={`/snippets/${snippet.id}`}>{snippet.title}</a>
-              <br />
-              <small>{new Date(snippet.createdAt).toLocaleDateString()}</small>
-            </li>
-          ))}
-        </ul>
-      )}
+      <div className="pt-6 border-t border-gray-200">
+        <h4 className="text-lg font-semibold text-gray-900 mb-4">
+          Recent Snippets
+        </h4>
+        {activity.recentSnippets.length === 0 ? (
+          <p className="text-sm text-gray-500">No recent snippets</p>
+        ) : (
+          <ul className="space-y-3">
+            {activity.recentSnippets.map((snippet) => (
+              <li key={snippet.id} className="group">
+                <a
+                  href={`/snippets/${snippet.id}`}
+                  className="block p-3 bg-gray-50 hover:bg-gray-100 rounded-gumroad transition-colors"
+                >
+                  <p className="font-medium text-gray-900 group-hover:text-primary-500 transition-colors">
+                    {snippet.title}
+                  </p>
+                  <p className="text-xs text-gray-500 mt-1">
+                    {new Date(snippet.createdAt).toLocaleDateString()}
+                  </p>
+                </a>
+              </li>
+            ))}
+          </ul>
+        )}
+      </div>
     </div>
   );
 }

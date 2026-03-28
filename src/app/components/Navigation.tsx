@@ -1,62 +1,37 @@
-// 📌 CONCEPT: Navigation Component with next/link
-
 "use client";
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 
 export default function Navigation() {
-  // 📌 CONCEPT: usePathname - Get current route
   const pathname = usePathname();
 
-  // 📌 Helper to check active link
   const isActive = (path: string) => pathname === path;
 
+  const links = [
+    { href: "/bookmarks", label: "Bookmarks" },
+    { href: "/snippets", label: "Snippets" },
+    { href: "/dashboard", label: "Dashboard" },
+  ];
+
   return (
-    <nav>
-      <Link
-        href="/"
-        // 📌 CONCEPT: Conditional styling (active link)
-        style={{
-          fontWeight: isActive("/") ? "bold" : "normal",
-          textDecoration: isActive("/") ? "underline" : "none",
-        }}
-      >
-        Home
-      </Link>
-      {" | "}
-
-      <Link
-        href="/bookmarks"
-        style={{
-          fontWeight: isActive("/bookmarks") ? "bold" : "normal",
-          textDecoration: isActive("/bookmarks") ? "underline" : "none",
-        }}
-      >
-        Bookmarks
-      </Link>
-      {" | "}
-
-      <Link
-        href="/snippets"
-        style={{
-          fontWeight: isActive("/snippets") ? "bold" : "normal",
-          textDecoration: isActive("/snippets") ? "underline" : "none",
-        }}
-      >
-        Snippets
-      </Link>
-      {" | "}
-
-      <Link
-        href="/dashboard"
-        style={{
-          fontWeight: isActive("/dashboard") ? "bold" : "normal",
-          textDecoration: isActive("/dashboard") ? "underline" : "none",
-        }}
-      >
-        Dashboard
-      </Link>
+    <nav className="hidden md:flex items-center gap-6">
+      {links.map((link) => (
+        <Link
+          key={link.href}
+          href={link.href}
+          className={`
+            text-sm font-semibold transition-colors duration-200
+            ${
+              isActive(link.href)
+                ? "text-gray-900"
+                : "text-gray-600 hover:text-gray-900"
+            }
+          `}
+        >
+          {link.label}
+        </Link>
+      ))}
     </nav>
   );
 }

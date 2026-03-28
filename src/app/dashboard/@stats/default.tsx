@@ -1,9 +1,9 @@
-// 📌 CONCEPT: default.tsx - Fallback for slot when route doesn't match
-
 export default function StatsDefault() {
   return (
-    <div>
-      <p>No stats available for this route</p>
+    <div className="card bg-gray-50">
+      <p className="text-sm text-gray-500 text-center py-8">
+        No stats available for this route
+      </p>
     </div>
   );
 }

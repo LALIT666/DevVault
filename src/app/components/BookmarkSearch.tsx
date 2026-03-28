@@ -27,7 +27,6 @@ export default function BookmarkSearch() {
     },
   ];
 
-  // 📌 CONCEPT: Client-side filtering
   const filteredBookmarks = allBookmarks.filter(
     (bookmark) =>
       bookmark.title.toLowerCase().includes(search.toLowerCase()) ||
@@ -37,33 +36,49 @@ export default function BookmarkSearch() {
   );
 
   return (
-    <div>
-      <p>CLIENT COMPONENT: Search (interactive)</p>
-
-      {/* 📌 CONCEPT: Controlled input */}
+    <div className="space-y-6">
       <input
         type="text"
         placeholder="Search bookmarks..."
         value={search}
         onChange={(e) => setSearch(e.target.value)}
+        className="input"
       />
 
-      <p>Found: {filteredBookmarks.length} bookmarks</p>
+      <p className="text-sm text-gray-600">
+        Found:{" "}
+        <span className="font-semibold text-gray-900">
+          {filteredBookmarks.length}
+        </span>{" "}
+        bookmarks
+      </p>
 
-      {filteredBookmarks.map((bookmark) => (
-        <div key={bookmark.id}>
-          <h3>{bookmark.title}</h3>
-          <Link href={bookmark.url} target="_blank">
-            {bookmark.url}
-          </Link>
-          <div>
-            {bookmark.tags.map((tag) => (
-              <span key={tag}>{tag} </span>
-            ))}
+      <div className="space-y-4">
+        {filteredBookmarks.map((bookmark) => (
+          <div key={bookmark.id} className="card">
+            <h3 className="text-xl font-semibold text-gray-900 mb-2">
+              {bookmark.title}
+            </h3>
+            <Link
+              href={bookmark.url}
+              target="_blank"
+              className="text-primary-500 hover:text-primary-600 text-sm break-all"
+            >
+              {bookmark.url}
+            </Link>
+            <div className="flex flex-wrap gap-2 mt-3">
+              {bookmark.tags.map((tag) => (
+                <span
+                  key={tag}
+                  className="px-3 py-1 bg-gray-100 text-gray-700 text-xs font-medium rounded-full"
+                >
+                  {tag}
+                </span>
+              ))}
+            </div>
           </div>
-          <hr />
-        </div>
-      ))}
+        ))}
+      </div>
     </div>
   );
 }

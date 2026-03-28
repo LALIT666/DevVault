@@ -7,9 +7,14 @@ export default async function PathDisplay() {
   const isAuthenticated = headersList.get("x-authenticated");
 
   return (
-    <div>
-      <p>Current path: {pathname}</p>
-      <p>Authenticated: {isAuthenticated}</p>
+    <div className="card bg-blue-50 border-blue-200">
+      <p className="text-sm text-blue-700">
+        Current path:{" "}
+        <span className="font-mono font-semibold">{pathname}</span>
+      </p>
+      <p className="text-sm text-blue-700 mt-2">
+        Authenticated: <span className="font-semibold">{isAuthenticated}</span>
+      </p>
     </div>
   );
 }

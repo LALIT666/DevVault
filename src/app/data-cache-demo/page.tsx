@@ -42,33 +42,63 @@ export default async function DataCacheDemoPage() {
   const noCacheData = await getNoCacheData();
 
   return (
-    <div>
-      <h2>Data Cache Demo</h2>
-
+    <div className="max-w-4xl mx-auto space-y-8">
       <div>
-        <h3>1. Default Cache (forever)</h3>
-        <p>Stars: {defaultData.stargazers_count}</p>
-        <p>Cached until manual revalidation</p>
+        <h2 className="text-3xl font-bold text-gray-900 mb-2">
+          Data Cache Demo
+        </h2>
+        <p className="text-gray-600">
+          Different caching strategies with fetch()
+        </p>
       </div>
 
-      <div>
-        <h3>2. Time-based (60s)</h3>
-        <p>Stars: {timeBasedData.stargazers_count}</p>
-        <p>Revalidates every 60 seconds</p>
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+        <div className="card bg-green-50 border-green-200">
+          <h3 className="text-lg font-semibold text-gray-900 mb-4">
+            1. Default Cache (forever)
+          </h3>
+          <p className="text-3xl font-bold text-green-600 mb-2">
+            {defaultData.stargazers_count.toLocaleString()}
+          </p>
+          <p className="text-sm text-gray-600">Stars</p>
+          <p className="text-xs text-gray-500 mt-4">
+            Cached until manual revalidation
+          </p>
+        </div>
+
+        <div className="card bg-blue-50 border-blue-200">
+          <h3 className="text-lg font-semibold text-gray-900 mb-4">
+            2. Time-based (60s)
+          </h3>
+          <p className="text-3xl font-bold text-blue-600 mb-2">
+            {timeBasedData.stargazers_count.toLocaleString()}
+          </p>
+          <p className="text-sm text-gray-600">Stars</p>
+          <p className="text-xs text-gray-500 mt-4">
+            Revalidates every 60 seconds
+          </p>
+        </div>
+
+        <div className="card bg-orange-50 border-orange-200">
+          <h3 className="text-lg font-semibold text-gray-900 mb-4">
+            3. No Cache
+          </h3>
+          <p className="text-3xl font-bold text-orange-600 mb-2">
+            {noCacheData.stargazers_count.toLocaleString()}
+          </p>
+          <p className="text-sm text-gray-600">Stars</p>
+          <p className="text-xs text-gray-500 mt-4">
+            Always fresh (fetch on every request)
+          </p>
+        </div>
       </div>
 
-      <div>
-        <h3>3. No Cache</h3>
-        <p>Stars: {noCacheData.stargazers_count}</p>
-        <p>Always fresh (fetch on every request)</p>
-      </div>
-
-      <hr />
-
-      <div>
-        <h3>Cache Options:</h3>
-        <pre>{`
-// Default (cached forever)
+      <div className="card">
+        <h3 className="text-xl font-semibold text-gray-900 mb-4">
+          Cache Options:
+        </h3>
+        <pre className="bg-gray-900 text-green-400 p-4 rounded-gumroad overflow-x-auto text-sm font-mono border-2 border-gray-800">
+          {`// Default (cached forever)
 fetch(url)
 
 // Time-based revalidation
@@ -78,8 +108,8 @@ fetch(url, { next: { revalidate: 60 } })
 fetch(url, { cache: 'no-store' })
 
 // Force cache
-fetch(url, { cache: 'force-cache' })
-        `}</pre>
+fetch(url, { cache: 'force-cache' })`}
+        </pre>
       </div>
     </div>
   );

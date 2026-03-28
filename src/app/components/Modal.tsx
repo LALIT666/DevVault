@@ -1,5 +1,3 @@
-// 📌 CONCEPT: Modal Component (Client Component)
-
 "use client";
 
 import { useRouter } from "next/navigation";
@@ -12,7 +10,6 @@ type ModalProps = {
 export default function Modal({ children }: ModalProps) {
   const router = useRouter();
 
-  // 📌 CONCEPT: Close modal on Escape key
   useEffect(() => {
     const handleEsc = (e: KeyboardEvent) => {
       if (e.key === "Escape") {
@@ -25,50 +22,19 @@ export default function Modal({ children }: ModalProps) {
   }, [router]);
 
   return (
-    <div>
-      {/* 📌 Backdrop */}
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
+      {/* Backdrop */}
       <div
         onClick={() => router.back()}
-        style={{
-          position: "fixed",
-          top: 0,
-          left: 0,
-          right: 0,
-          bottom: 0,
-          backgroundColor: "rgba(0, 0, 0, 0.5)",
-          zIndex: 999,
-        }}
+        className="absolute inset-0 bg-black/50 backdrop-blur-sm"
       />
 
-      {/* 📌 Modal content */}
-      <div
-        style={{
-          position: "fixed",
-          top: "50%",
-          left: "50%",
-          transform: "translate(-50%, -50%)",
-          backgroundColor: "white",
-          padding: "2rem",
-          borderRadius: "8px",
-          maxWidth: "600px",
-          width: "90%",
-          maxHeight: "80vh",
-          overflow: "auto",
-          zIndex: 1000,
-        }}
-      >
-        {/* 📌 Close button */}
+      {/* Modal content */}
+      <div className="relative bg-white rounded-gumroad shadow-2xl max-w-2xl w-full max-h-[90vh] overflow-auto p-8">
+        {/* Close button */}
         <button
           onClick={() => router.back()}
-          style={{
-            position: "absolute",
-            top: "1rem",
-            right: "1rem",
-            background: "none",
-            border: "none",
-            fontSize: "1.5rem",
-            cursor: "pointer",
-          }}
+          className="absolute top-4 right-4 text-gray-400 hover:text-gray-900 text-2xl font-bold transition-colors"
         >
           ✕
         </button>

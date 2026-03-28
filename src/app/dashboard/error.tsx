@@ -8,11 +8,13 @@ export default function DashboardError({
   reset: () => void;
 }) {
   return (
-    <div>
-      <h2>ERROR: Something went wrong!</h2>
-      <p>Error: {error.message}</p>
-
-      <button onClick={reset}>Try Again</button>
+    <div className="card bg-red-50 border-red-200 text-center space-y-4">
+      <div className="text-5xl">⚠️</div>
+      <h2 className="text-2xl font-bold text-red-900">Something went wrong!</h2>
+      <p className="text-sm text-red-700">{error.message}</p>
+      <button onClick={reset} className="btn btn-primary">
+        Try Again
+      </button>
     </div>
   );
 }
