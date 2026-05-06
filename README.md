@@ -43,3 +43,20 @@ You must have **Docker Desktop** installed on your machine to run the database.
 git clone https://github.com/your-username/devvault.git
 cd devvault
 ```
+
+# 1. Start the PostgreSQL container
+
+docker compose up -d
+
+# 2. Sync Prisma schema with database (Create tables)
+
+npx prisma db push
+
+# 3. Generate Prisma Client
+
+npx prisma generate
+
+# 4. Run locally
+
+npm install
+npm run dev
