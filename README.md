@@ -44,25 +44,25 @@ git clone https://github.com/your-username/devvault.git
 cd devvault
 ```
 
-### 1. Start the PostgreSQL container
+#### 1. Start the PostgreSQL container
 
 ```bash
 docker compose up -d
 ```
 
-### 2. Sync Prisma schema with database (Create tables)
+#### 2. Sync Prisma schema with database (Create tables)
 
 ```bash
 npx prisma db push
 ```
 
-### 3. Generate Prisma Client
+#### 3. Generate Prisma Client
 
 ```bash
 npx prisma generate
 ```
 
-# 4. Run locally
+#### 4. Run locally
 
 ```bash
 npm install
