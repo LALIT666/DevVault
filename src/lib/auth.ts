@@ -43,11 +43,16 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
           return null;
         }
 
+        console.log(" from now on Ever log is comming from auth.ts");
+
         const { email, password } = parsedCredentials.data;
+        console.log({ email }, "in auth.ts");
 
         const user = await prisma.user.findUnique({
           where: { email },
         });
+
+        console.log({ user }, "in auth.ts");
 
         if (!user || !user.password) {
           console.log("User not found or no password set");
@@ -77,6 +82,9 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
       if (user) {
         token.id = user.id;
       }
+
+      console.log({ token });
+      console.log({ user });
 
       return token;
     },

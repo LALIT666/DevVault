@@ -46,12 +46,18 @@ export async function signupUser(
   }
 
   const { name, email, password } = validatedFields.data;
+  console.log("Ever log is comming from auth.signup.actions");
+
+  console.log(
+    `auth.signup.actions -- name: ${name}, email: ${email}, password: ${password}`,
+  );
 
   try {
     // 📌 Check if user already exists
     const existingUser = await prisma.user.findUnique({
       where: { email },
     });
+    console.log({ existingUser });
 
     if (existingUser) {
       return {

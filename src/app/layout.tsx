@@ -3,6 +3,7 @@ import { Metadata } from "next";
 import "./globals.css";
 import Navigation from "./components/Navigation";
 import UserInfo from "./components/UserInfo";
+import Footer from "./components/Footer";
 
 export const metadata: Metadata = {
   title: {
@@ -48,35 +49,7 @@ export default function RootLayout({ children }: { children: ReactNode }) {
         </main>
 
         {/* Footer */}
-        <footer className="bg-white border-t border-gray-200 mt-auto">
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-            <div className="flex flex-col md:flex-row justify-between items-center gap-4">
-              <p className="text-sm text-gray-500">
-                © 2024 DevVault. Built with Next.js 14.
-              </p>
-              <div className="flex gap-6">
-                <a
-                  href="#"
-                  className="text-sm text-gray-500 hover:text-gray-900 transition-colors duration-200"
-                >
-                  About
-                </a>
-                <a
-                  href="#"
-                  className="text-sm text-gray-500 hover:text-gray-900 transition-colors duration-200"
-                >
-                  Privacy
-                </a>
-                <a
-                  href="#"
-                  className="text-sm text-gray-500 hover:text-gray-900 transition-colors duration-200"
-                >
-                  Terms
-                </a>
-              </div>
-            </div>
-          </div>
-        </footer>
+        <Footer />
       </body>
     </html>
   );
